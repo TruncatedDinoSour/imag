@@ -11,6 +11,8 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 
 from . import const
 
+__version__: str = "0.0.3"
+
 
 def create_app(db: str = "sqlite:///imag.db") -> t.Tuple[flask.Flask, t.Optional[str]]:
     """creates an imag app, returns a tuple of the app and the admin key if it was created"""
@@ -51,6 +53,7 @@ def create_app(db: str = "sqlite:///imag.db") -> t.Tuple[flask.Flask, t.Optional
         return {
             "desc_len": const.DESC_LEN,
             "key_len": const.KEY_LEN,
+            "imagv": __version__,
         }
 
     @app.after_request
@@ -61,9 +64,9 @@ def create_app(db: str = "sqlite:///imag.db") -> t.Tuple[flask.Flask, t.Optional
 
         if not app.debug:
             response.headers["Content-Security-Policy"] = "upgrade-insecure-requests"
-            response.headers[
-                "Strict-Transport-Security"
-            ] = "max-age=63072000; includeSubDomains; preload"
+            response.headers["Strict-Transport-Security"] = (
+                "max-age=63072000; includeSubDomains; preload"
+            )
 
         response.headers["X-Frame-Options"] = "ALLOWALL"
         response.headers["X-Content-Type-Options"] = "nosniff"

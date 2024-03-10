@@ -4,9 +4,15 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Imag</title>
 
+        {% if title is defined %}
+        <title>Imag - {{ title | escape }}</title>
+        <meta name="description" content="The Imag image board | {{ title | escape }}" />
+        {% else %}
+        <title>Imag</title>
         <meta name="description" content="The Imag image board" />
+        {% endif %}
+
         <meta
             name="keywords"
             content="imageboard, image board, image, image hosting"
@@ -43,7 +49,7 @@
     </head>
 
     <body>
-        <h1>The <a href="https://ari.lt/gh/imag">Imag</a> image board.</h1>
+        <h1>The <a href="https://ari.lt/gh/imag">Imag</a> image board ({{ imagv }}).</h1>
 
         {% with messages = get_flashed_messages(with_categories=True) %}
             {% if messages %}
@@ -62,6 +68,8 @@
                 <input type="text" name="q" id="q" placeholder="query" required />
                 <button type="submit">Search</button>
             </form>
+
+            <i>Count: {{ images | length }}</i>
 
             <details>
                 <summary>Or post an image</summary>

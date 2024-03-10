@@ -8,7 +8,6 @@ from datetime import datetime
 
 import flask
 import magic
-from sqlalchemy import or_
 from werkzeug.wrappers import Response
 
 from . import const, models, util
@@ -22,7 +21,7 @@ def index() -> str:
     """index page"""
     return flask.render_template(
         "index.j2",
-        images=models.Image.query.order_by(models.Image.created.desc()).all(),
+        images=models.Image.query.order_by(models.Image.created.desc()).all(),  # type: ignore
     )
 
 
@@ -64,12 +63,13 @@ def search() -> t.Union[Response, str]:
     return flask.render_template(
         "index.j2",
         images=models.Image.by_search(query),  # type: ignore
+        title=query,
     )
 
 
-@views.get("/image/<int:iid>")
-@views.get("/image/<int:iid>.png")
 @views.get("/image/<int:iid>.jpg")
+@views.get("/image/<int:iid>.png")
+@views.get("/image/<int:iid>")
 @util.api
 def image(iid: int) -> flask.Response:
     """get image"""
@@ -97,11 +97,21 @@ def edit(iid: int) -> Response:
 
     if (desc := flask.request.form.get("desc")) is not None:
         image.desc = desc
+        flask.flash("Image description edited.")
 
     if "image" in flask.request.files:
-        flask.request.files["image"].save(os.path.join(const.IMAGE_DIR, str(image.iid)))  # type: ignore
+        file: t.Any = flask.request.files["image"]
+
+        mime: t.Any = magic.from_buffer(file.read(1024), mime=True)
+        file.seek(0)
+
+        if mime.startswith("image/"):
+            file.save(os.path.join(const.IMAGE_DIR, str(image.iid)))
+            flask.flash("Image file edited.")
+
+    image: models.Image = models.Image((flask.request.form.get("desc") or "").strip())
 
     image.edited = datetime.utcnow()  # type: ignore
     models.db.session.commit()
 
-    return flask.redirect(flask.url_for("views.image", iid=image.iid))
+    return flask.redirect("/")
