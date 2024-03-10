@@ -20,3 +20,20 @@ license : unlicense
 
 see the [doc directory](/dov) for documentation, it also has an example nginx config,
 and you can also run the app using [./scripts/run.sh](./scripts/run.sh) to match that config :)
+
+gunicorn running ( run.sh ) is for production use, for master key generation ( first run ), please
+run it like
+
+```sh
+python3 src/main.py
+```
+
+and only then with gunicorn :)
+
+if you already ran it in production and don't know where the key is, run the following command :
+
+```sh
+rm -rf src/images src/instance
+```
+
+and then run it in debug
