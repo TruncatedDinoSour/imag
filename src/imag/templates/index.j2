@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Imag</title>
+
+        <meta name="description" content="The Imag image board" />
+        <meta
+            name="keywords"
+            content="imageboard, image board, image, image hosting"
+        />
+        <meta
+            name="robots"
+            content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large"
+        />
+        <meta property="og:type" content="website" />
+
+        <meta name="color-scheme" content="dark" />
+        <meta name="theme-color" content="black" />
+
+        <meta name="license" content="unlicense" />
+
+        <!-- preloads the css ( technically you can replace it with a style tag -->
+
+        <link
+            href="{{ url_for("static", filename="index.css") }}"
+            rel="preload"
+            referrerpolicy="no-referrer"
+            type="text/css"
+            as="style"
+            onload="this.onload=null;this.rel='stylesheet'"
+        />
+        <noscript>
+            <link
+                href="{{ url_for("static", filename="index.css") }}"
+                rel="stylesheet"
+                referrerpolicy="no-referrer"
+                type="text/css"
+            />
+        </noscript>
+    </head>
+
+    <body>
+        <h1>The <a href="https://ari.lt/gh/imag">Imag</a> image board.</h1>
+
+        {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+            <details open>
+            <summary>messages from the server</summary>
+            {% for category, message in messages %}
+                <div data-category="{{ category }}">{{ message | escape }}</div>
+            {% endfor %}
+            </details>
+            {% endif %}
+        {% endwith %}
+
+        <div>
+            <form method="GET" action="/search">
+                <label for="q">Search query:</label>
+                <input type="text" name="q" id="q" placeholder="query" required />
+                <button type="submit">Search</button>
+            </form>
+
+            <details>
+                <summary>Or post an image</summary>
+
+                <form method="POST" enctype="multipart/form-data">
+                    <label for="desc">Image description:</label>
+                    <input type="text" name="desc" id="desc" placeholder="description" maxlength="{{ key_len }}" />
+
+                    <br />
+
+                    <label for="key">Access key:</label>
+                    <input type="password" name="key" id="key" placeholder="key" maxlength="{{ desc_len }}" required />
+
+                    <br />
+
+                    <label for="image">Image:</label>
+                    <input type="file" accept="image/*" name="image" id="image" placeholder="the image" required />
+
+                    <br />
+
+                    <button type="post">Post</button>
+                </form>
+            </details>
+        </div>
+
+        <br />
+        <hr />
+        <br />
+
+        {% if images %}
+            {% for image in images %}
+            <div class="image" id="{{ image.iid }}">
+                <a target="_blank" href="{{ url_for("views.image", iid=image.iid) }}"> <img src="{{ url_for("views.image", iid=image.iid) }}" loading="lazy" /> </a>
+                <p>{{ (image.desc or "No description.") | escape }}</p>
+                <p>Created: <date>{{ image.created }}</date> - Edited: <date>{{ image.edited }}</date></p>
+                <details>
+                    <summary>Edit image with ID {{ image.iid }}</summary>
+
+                    <form method="POST" action="{{ url_for("views.edit", iid=image.iid) }}" enctype="multipart/form-data">
+                        <label for="desc">Image description:</label>
+                        <input type="text" name="desc" id="desc" placeholder="description" maxlength="{{ key_len }}" value="{{ (image.desc or "") | escape }}" />
+
+                        <br />
+
+                        <label for="key">Access key:</label>
+                        <input type="password" name="key" id="key" placeholder="key" maxlength="{{ desc_len }}" required />
+
+                        <br />
+
+                        <label for="image">Replace image:</label>
+                        <input type="file" accept="image/*" name="image" id="image" placeholder="the image" />
+
+                        <br />
+
+                        <label for="delete">Delete image:</label>
+                        <input type="checkbox" name="delete" id="delete" />
+
+                        <br />
+
+                        <button type="post">Commit changes</button>
+                    </form>
+                </details>
+            </div>
+            {% endfor %}
+        {% else %}
+            <i>No images found :(</i>
+        {% endif %}
+
+        <script>console.log("Originally made with <3 by Ari Archer <ari@ari.lt> on 2024/03/10, licensed under the Unlicense: https://ari.lt/gh/imag");</script>
+    </body>
+</html>
