@@ -11,7 +11,7 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 
 from . import const
 
-__version__: str = "0.0.3"
+__version__: str = "0.0.4"
 
 
 def create_app(db: str = "sqlite:///imag.db") -> t.Tuple[flask.Flask, t.Optional[str]]:

@@ -9,6 +9,10 @@ this is not sole software, it is suckless ( ? ) software, which you are meant
 to hack yourself,, you can, of course, use the default settings and whatnot,
 but it is highly encouraged to make forks and hack it yourself :)
 
+example instance : https://quotes.ari.lt/
+
+~~i hate github versioning so much~~
+
 # licensing
 
 you can distribute, modify, share, redistribute, etc etc etc with no credit or anything,
