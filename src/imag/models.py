@@ -124,5 +124,7 @@ class Image(db.Model):
                     cls.created.cast(db.String).ilike(f"%{query}%"),  # type: ignore
                     cls.edited.cast(db.String).ilike(f"%{query}%"),  # type: ignore
                 )
-            ).all()
+            )
+            .order_by(cls.created.desc())  # type: ignore
+            .all()
         )

@@ -22,7 +22,7 @@ def index() -> str:
     """index page"""
     return flask.render_template(
         "index.j2",
-        images=models.Image.query.all(),
+        images=models.Image.query.order_by(models.Image.created.desc()).all(),
     )
 
 
