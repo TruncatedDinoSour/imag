@@ -19,10 +19,11 @@ license : unlicense
 # docs & running
 
 see the [doc directory](/dov) for documentation, it also has an example nginx config,
-and you can also run the app using [./scripts/run.sh](./scripts/run.sh) to match that config :)
+and you can also run the app using [./scripts/run.sh](./scripts/run.sh) to match that config :) - but don't run it using
+the run.sh as the first run if you ever want to post on it lol
 
-gunicorn running ( run.sh ) is for production use, for master key generation ( first run ), please
-run it like
+running with gunicorn ( run.sh ) is for production use, for master key generation ( first run ), please
+run it in dev mode :
 
 ```sh
 python3 src/main.py

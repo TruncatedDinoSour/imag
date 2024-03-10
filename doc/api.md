@@ -15,3 +15,6 @@ the POST APIs are based on form data requests and JSON responses
     -   `GET /api/key/keys` - list all keys and their permission levels
     -   `GET /api/key/info` - shows information about a specific key
         -   `target` - the target key
+
+keep in mind, this is **form data**, so in for example JavaScript you'd use `FormData`, or `-F'field=value'` in curl
+and whatnot
