@@ -64,6 +64,7 @@ def search() -> t.Union[Response, str]:
         "index.j2",
         images=models.Image.by_search(query),  # type: ignore
         title=query,
+        q=query,
     )
 
 
@@ -108,8 +109,6 @@ def edit(iid: int) -> Response:
         if mime.startswith("image/"):
             file.save(os.path.join(const.IMAGE_DIR, str(image.iid)))
             flask.flash("Image file edited.")
-
-    image: models.Image = models.Image((flask.request.form.get("desc") or "").strip())
 
     image.edited = datetime.utcnow()  # type: ignore
     models.db.session.commit()
