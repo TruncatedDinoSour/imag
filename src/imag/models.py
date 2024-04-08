@@ -8,6 +8,8 @@ from datetime import datetime
 from enum import Enum, auto
 from secrets import SystemRandom
 
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import DateTime
 from sqlalchemy import Enum as StorageEnum
@@ -18,6 +20,13 @@ from . import const
 db: SQLAlchemy = SQLAlchemy()
 
 rand: SystemRandom = SystemRandom()
+
+limiter: Limiter = Limiter(
+    get_remote_address,
+    default_limits=["60 per minute", "30 per second"],
+    storage_uri="memcached://127.0.0.1:18391",
+    strategy="fixed-window",
+)
 
 
 class AccessLevel(Enum):
@@ -84,6 +93,10 @@ class Image(db.Model):
         DateTime,
         default=datetime.utcnow,
         nullable=False,
+    )
+    score: int = db.Column(
+        db.Integer,
+        default=0,
     )
 
     def __init__(self, desc: t.Optional[str] = None) -> None:

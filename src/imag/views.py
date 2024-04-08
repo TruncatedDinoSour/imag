@@ -114,3 +114,25 @@ def edit(iid: int) -> Response:
     models.db.session.commit()
 
     return flask.redirect("/")
+
+
+@views.post("/vote/<string:mode>/<int:iid>")
+@models.limiter.limit("1 per day")
+def vote(mode: str, iid: int) -> Response:
+    """vote for an image"""
+
+    mode = mode.lower()
+
+    image: models.Image = models.Image.query.filter_by(iid=iid).first_or_404()
+
+    if mode == "up":
+        image.score += 1
+    elif mode == "down":
+        image.score -= 1
+    else:
+        flask.abort(400)
+
+    flask.flash(f"Your {mode}vote for image {iid} has been saved!")
+    models.db.session.commit()
+
+    return flask.redirect("/")

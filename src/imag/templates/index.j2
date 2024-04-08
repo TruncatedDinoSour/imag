@@ -46,6 +46,8 @@
                 type="text/css"
             />
         </noscript>
+
+        <script src="{{ url_for("static", filename="index.js") }}"></script>
     </head>
 
     <body>
@@ -103,6 +105,7 @@
             {% for image in images %}
             <div class="image" id="{{ image.iid }}">
                 <a target="_blank" href="{{ url_for("views.image", iid=image.iid) }}"> <img src="{{ url_for("views.image", iid=image.iid) }}" loading="lazy" /> </a>
+                <p>{{ image.score }} | <button onclick="vote('up',{{ image.iid }})" name="upvote">👍</button> or <button onclick="vote('down',{{ image.iid }})" name="downvote">👎</button></p>
                 <p>{{ (image.desc or "No description.") | escape }}</p>
                 <p>Created: <date>{{ image.created }}</date> - Edited: <date>{{ image.edited }}</date></p>
                 <details>
