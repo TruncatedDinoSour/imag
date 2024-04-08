@@ -13,6 +13,12 @@ from .routing import Bp
 api: Bp = Bp("api", __name__).set_api()
 
 
+@api.get("/count")
+def image_count() -> flask.Response:
+    """get image count"""
+    return flask.Response(str(models.Image.query.count()), 200, content_type="text/plain")  # type: ignore
+
+
 @api.get("/image/<int:iid>")
 def image(iid: int) -> flask.Response:
     """get image data"""
