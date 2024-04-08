@@ -14,7 +14,7 @@ function vote(mode, id) {
             return r.text();
         })
         .then((t) => {
-            history.pushState(null, null, `#${id}`);
+            history.pushState(null, null, `/#${id}`);
 
             document.write(t);
             document.close();
