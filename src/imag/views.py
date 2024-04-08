@@ -8,6 +8,7 @@ from datetime import datetime
 
 import flask
 import magic
+from flask_limiter.util import get_remote_address
 from werkzeug.wrappers import Response
 
 from . import const, models, util
@@ -21,7 +22,7 @@ def index() -> str:
     """index page"""
     return flask.render_template(
         "index.j2",
-        images=models.Image.query.order_by(models.Image.created.desc()).all(),  # type: ignore
+        images=models.Image.query.order_by(models.Image.score.desc()).all(),  # type: ignore
     )
 
 
@@ -117,7 +118,7 @@ def edit(iid: int) -> Response:
 
 
 @views.post("/vote/<string:mode>/<int:iid>")
-@models.limiter.limit("1 per day", key_func=lambda: flask.request.view_args.get("iid"))  # type: ignore
+@models.limiter.limit("1 per day", key_func=lambda: str(flask.request.view_args.get("iid")) + get_remote_address())  # type: ignore
 def vote(mode: str, iid: int) -> Response:
     """vote for an image"""
 
@@ -132,7 +133,7 @@ def vote(mode: str, iid: int) -> Response:
     else:
         flask.abort(400)
 
-    flask.flash(f"Your {mode}vote for image {iid} has been saved!")
+    flask.flash(f"Your {mode}vote for image #{iid} has been saved!")
     models.db.session.commit()
 
     return flask.redirect("/")

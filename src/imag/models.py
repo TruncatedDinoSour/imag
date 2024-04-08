@@ -23,7 +23,7 @@ rand: SystemRandom = SystemRandom()
 
 limiter: Limiter = Limiter(
     get_remote_address,
-    default_limits=["60 per minute", "30 per second"],
+    default_limits=["30 per second"],
     storage_uri="memcached://127.0.0.1:18391",
     strategy="fixed-window",
 )
@@ -125,12 +125,12 @@ class Image(db.Model):
         }
 
     @classmethod
-    def by_search(cls, query: str) -> t.Set["Image"]:
+    def by_search(cls, query: str) -> t.Tuple["Image", ...]:
         """search for images"""
 
         query = query.lower()
 
-        return set(
+        return tuple(
             cls.query.filter(
                 or_(
                     cls.desc.ilike(f"%{query}%"),  # type: ignore
@@ -138,6 +138,6 @@ class Image(db.Model):
                     cls.edited.cast(db.String).ilike(f"%{query}%"),  # type: ignore
                 )
             )
-            .order_by(cls.created.desc())  # type: ignore
+            .order_by(cls.score.desc())
             .all()
         )
