@@ -117,7 +117,7 @@ def edit(iid: int) -> Response:
 
 
 @views.post("/vote/<string:mode>/<int:iid>")
-@models.limiter.limit("1 per day")
+@models.limiter.limit("1 per day", key_func=lambda: flask.request.view_args.get("iid"))  # type: ignore
 def vote(mode: str, iid: int) -> Response:
     """vote for an image"""
 
