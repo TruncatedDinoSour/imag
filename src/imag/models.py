@@ -23,7 +23,6 @@ rand: SystemRandom = SystemRandom()
 
 limiter: Limiter = Limiter(
     get_remote_address,
-    default_limits=["30 per second"],
     storage_uri="memcached://127.0.0.1:18391",
     strategy="fixed-window",
 )
@@ -122,6 +121,7 @@ class Image(db.Model):
             "desc": self.desc,
             "created": self.created.timestamp(),
             "edited": self.edited.timestamp(),
+            "score": self.score,
         }
 
     @classmethod
@@ -136,8 +136,10 @@ class Image(db.Model):
                     cls.desc.ilike(f"%{query}%"),  # type: ignore
                     cls.created.cast(db.String).ilike(f"%{query}%"),  # type: ignore
                     cls.edited.cast(db.String).ilike(f"%{query}%"),  # type: ignore
+                    cls.score.cast(db.String).ilike(f"%{query}%"),  # type: ignore
                 )
             )
-            .order_by(cls.score.desc())
+            .order_by(cls.created.desc())  # type: ignore
+            .order_by(cls.score.desc())  # type: ignore
             .all()
         )

@@ -14,7 +14,8 @@ function vote(mode, id) {
             return r.text();
         })
         .then((t) => {
-            window.location.hash = id;
+            history.pushState(null, null, `#${id}`);
+
             document.write(t);
             document.close();
         })
