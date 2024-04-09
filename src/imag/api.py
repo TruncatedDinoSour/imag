@@ -34,7 +34,7 @@ def search() -> flask.Response:
     if not query:
         flask.abort(400)
 
-    return flask.jsonify([image.json() for image in models.Image.by_search(query)])  # type: ignore
+    return flask.jsonify([image.json() for image in models.Image.by_search(query, flask.request.args.get("s") != "newest")])  # type: ignore
 
 
 @api.post("/key")

@@ -69,6 +69,7 @@
                 <label for="q">Search query:</label>
                 <input type="text" name="q" id="q" placeholder="query" {% if q is defined %} value="{{ q | escape }}" {% endif %} required />
                 <button type="submit">Search</button>
+                {% if q is defined and "s=newest" not in request.url %} <a href="{{ request.url }}&s=newest">Sort by newest</a> {% endif %}
             </form>
 
             <i>Count: {{ images | length }}</i>

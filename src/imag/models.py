@@ -125,21 +125,22 @@ class Image(db.Model):
         }
 
     @classmethod
-    def by_search(cls, query: str) -> t.Tuple["Image", ...]:
+    def by_search(cls, query: str, score: bool = True) -> t.Tuple["Image", ...]:
         """search for images"""
 
         query = query.lower()
 
-        return tuple(
-            cls.query.filter(
-                or_(
-                    cls.desc.ilike(f"%{query}%"),  # type: ignore
-                    cls.created.cast(db.String).ilike(f"%{query}%"),  # type: ignore
-                    cls.edited.cast(db.String).ilike(f"%{query}%"),  # type: ignore
-                    cls.score.cast(db.String).ilike(f"%{query}%"),  # type: ignore
-                )
+        results: t.Any = cls.query.filter(
+            or_(
+                cls.desc.ilike(f"%{query}%"),  # type: ignore
+                cls.created.cast(db.String).ilike(f"%{query}%"),  # type: ignore
+                cls.edited.cast(db.String).ilike(f"%{query}%"),  # type: ignore
             )
-            .order_by(cls.created.desc())  # type: ignore
-            .order_by(cls.score.desc())  # type: ignore
-            .all()
         )
+
+        if score:
+            results = results.order_by(cls.score.desc(), cls.created.desc())  # type: ignore
+        else:
+            results = results.order_by(cls.created.desc())  # type: ignore
+
+        return tuple(results.all())  # type: ignore

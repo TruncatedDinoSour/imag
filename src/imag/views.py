@@ -63,7 +63,7 @@ def search() -> t.Union[Response, str]:
 
     return flask.render_template(
         "index.j2",
-        images=models.Image.by_search(query),  # type: ignore
+        images=models.Image.by_search(query, flask.request.args.get("s") != "newest"),  # type: ignore
         title=query,
         q=query,
     )
