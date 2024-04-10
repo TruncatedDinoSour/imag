@@ -19,6 +19,17 @@ def latest_image() -> flask.Response:
     return flask.Response(str(models.Image.query.order_by((models.Image.created).desc()).first().iid), 200, content_type="text/plain")  # type: ignore
 
 
+@api.get("/all")
+def all_mages() -> flask.Response:
+    """get latest image id"""
+    return flask.jsonify(
+        [
+            img.json()  # type: ignore
+            for img in models.Image.query.order_by((models.Image.created if "newest" == flask.request.args.get("s") else models.Image.score).desc()).all()  # type: ignore
+        ]
+    )
+
+
 @api.get("/image/<int:iid>")
 def image(iid: int) -> flask.Response:
     """get image data"""
