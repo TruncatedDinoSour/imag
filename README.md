@@ -20,6 +20,10 @@ this project is released under unlicense and i give away all my rights to this p
 
 license : unlicense
 
+# bot
+
+i made a matrix bot to integrate well with this, it is open source : <https://ari.lt/gh/quotes-bot>, mainly for purpose of posting quotes
+
 # docs & running
 
 see the [doc directory](/dov) for documentation, it also has an example nginx config,
