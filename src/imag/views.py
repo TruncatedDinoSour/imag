@@ -22,7 +22,7 @@ def index() -> str:
     """index page"""
     return flask.render_template(
         "index.j2",
-        images=models.Image.query.order_by(models.Image.score.desc()).all(),  # type: ignore
+        images=models.Image.query.order_by((models.Image.created if flask.request.args.get("s") == "newest" else models.Image.score).desc()).all(),  # type: ignore
     )
 
 
@@ -80,7 +80,7 @@ def image(iid: int) -> flask.Response:
         with open(os.path.join(const.IMAGE_DIR, str(iid)), "rb") as fp:
             file: bytes = fp.read()
             return flask.Response(file, mimetype=magic.from_buffer(file, mime=True))  # type: ignore
-    except FileNotFoundError:
+    except Exception:
         flask.abort(404)
 
 
@@ -94,6 +94,7 @@ def edit(iid: int) -> Response:
     if flask.request.form.get("delete"):
         models.db.session.delete(image)
         models.db.session.commit()
+        os.remove(os.path.join(const.IMAGE_DIR, str(image.iid)))
         flask.flash(f"Image {image.iid} deleted.")
         return flask.redirect("/")
 

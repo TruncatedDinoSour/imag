@@ -26,7 +26,7 @@
         <meta name="color-scheme" content="dark" />
         <meta name="theme-color" content="black" />
 
-        <meta name="license" content="unlicense" />
+        <meta name="license" content="Unlicense" />
 
         <!-- preloads the css ( technically you can replace it with a style tag -->
 
@@ -99,9 +99,12 @@
                 <input type="text" name="q" id="q" placeholder="query" {% if q is defined %} value="{{ q | escape }}" {% endif %} required />
                 <button type="submit">Search</button>
                 {% if q is defined and "s=newest" not in request.url %} <a href="{{ request.url }}&s=newest">Sort by newest</a> {% endif %}
+                {% if q is defined %} <a href="/">Back home</a> {% endif %}
             </form>
 
             <i>Count: {{ images | length }}</i>
+
+            {% if q is not defined and "s=newest" not in request.url %} <a href="/?s=newest">Sort by newest</a> {% endif %}
 
             <details>
                 <summary>Or post an image</summary>

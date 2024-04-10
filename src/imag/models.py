@@ -4,6 +4,7 @@
 
 import base64
 import typing as t
+import os
 from datetime import datetime
 from enum import Enum, auto
 from secrets import SystemRandom
