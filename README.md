@@ -42,3 +42,14 @@ rm -rf src/images src/instance
 ```
 
 and then run it in debug
+
+### step-by-step
+
+this comes from an email i got from a user :
+
+1. clone the repository : `git clone https://ari.lt/gh/imag && cd imag`
+2. make sure you have virtualenv installed ( either through python-virtualenv / python3-virtualenv / py3-virtualenv packages, or by pip - `python3 -m pip install --user --break-system-packages --upgrade virtualenv`
+3. ensure you have sqlite3 and memcached installed : `apt install sqlite3 memcached`
+3. create a new virtual environment : `python3 -m virtualenv venv && source venv/bin/activate`
+4. install the dependencies in the environment : `pip install -r requirements.txt`
+5. run the app by either running `scripts/run.sh` or by manually starting memcached and running `src/main.py` with gunicorn ( i assume you're reverse proxying it anyway )
