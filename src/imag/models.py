@@ -138,6 +138,7 @@ class Image(db.Model):
             "created": self.created.timestamp(),
             "edited": self.edited.timestamp(),
             "score": self.score,
+            "ocr": self.ocr,
         }
 
     @classmethod
