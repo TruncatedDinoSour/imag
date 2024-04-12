@@ -36,26 +36,34 @@
              * @licstart The following is the entire license notice for the JavaScript
              * code in this page.
              *
-             * Copyright (C) 2024 Ari Archer
+             * This is free and unencumbered software released into the public domain.
              *
-             * The JavaScript code in this page is free software: you can redistribute
-             * it and/or modify it under the terms of the GNU General Public License
-             * (GNU GPL) as published by the Free Software Foundation, either version 3
-             * of the License, or (at your option) any later version.  The code is
-             * distributed WITHOUT ANY WARRANTY; without even the implied warranty of
-             * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU GPL
-             * for more details.
+             * Anyone is free to copy, modify, publish, use, compile, sell, or
+             * distribute this software, either in source code form or as a compiled
+             * binary, for any purpose, commercial or non-commercial, and by any
+             * means.
              *
-             * As additional permission under GNU GPL version 3 section 7, you may
-             * distribute non-source (e.g., minimized or compacted) forms of that code
-             * without the copy of the GNU GPL normally required by section 4, provided
-             * you include this license notice and a URL through which recipients can
-             * access the Corresponding Source.
+             * In jurisdictions that recognize copyright laws, the author or authors
+             * of this software dedicate any and all copyright interest in the
+             * software to the public domain. We make this dedication for the benefit
+             * of the public at large and to the detriment of our heirs and
+             * successors. We intend this dedication to be an overt act of
+             * relinquishment in perpetuity of all present and future rights to this
+             * software under copyright law.
+             *
+             * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+             * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+             * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+             * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+             * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+             * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+             * OTHER DEALINGS IN THE SOFTWARE.
+             *
+             * For more information, please refer to <http://unlicense.org/>
              *
              * @licend The above is the entire license notice for the JavaScript code
              * in this page.
              */
-
             //--><!]]>
         </script>
 
@@ -76,7 +84,7 @@
             />
         </noscript>
 
-        <script src="{{ url_for("static", filename="index.js") }}"></script>
+        <script src="{{ url_for("static", filename="index.js") }}" defer></script>
     </head>
 
     <body>
@@ -111,12 +119,12 @@
 
                 <form method="POST" enctype="multipart/form-data">
                     <label for="desc">Image description:</label>
-                    <input type="text" name="desc" id="desc" placeholder="description" maxlength="{{ key_len }}" />
+                    <input type="text" name="desc" id="desc" placeholder="description" maxlength="{{ desc_len }}" />
 
                     <br />
 
                     <label for="key">Access key:</label>
-                    <input type="password" name="key" id="key" placeholder="key" maxlength="{{ desc_len }}" required />
+                    <input type="password" name="key" id="key" placeholder="key" maxlength="{{ key_len }}" required />
 
                     <br />
 
@@ -137,8 +145,10 @@
         {% if images %}
             {% for image in images %}
             <div class="image" id="{{ image.iid }}">
-                <a target="_blank" href="{{ url_for("views.image", iid=image.iid) }}"> <img src="{{ url_for("views.image", iid=image.iid) }}" loading="lazy" /> </a>
-                <p><span id="score-{{ image.iid }}">{{ image.score }}</span> | <button onclick="vote('up',{{ image.iid }})" name="upvote">👍</button> or <button onclick="vote('down',{{ image.iid }})" name="downvote">👎</button></p>
+                <a target="_blank" href="{{ url_for("views.image", iid=image.iid) }}">
+                    <img loading="lazy" src="{{ url_for("views.image", iid=image.iid) }}" alt="{{ image.ocr | escape }}" />
+                </a>
+                <p><span id="score-{{ image.iid }}">{{ image.score }}</span> | <button onclick="vote('up',{{ image.iid }})" title="upvote">👍</button> or <button onclick="vote('down',{{ image.iid }})" title="downvote">👎</button></p>
                 <p>{{ (image.desc or "No description.") | escape }}</p>
                 <p>Created: <date>{{ image.created }}</date> - Edited: <date>{{ image.edited }}</date></p>
                 <details>
@@ -146,12 +156,12 @@
 
                     <form method="POST" action="{{ url_for("views.edit", iid=image.iid) }}" enctype="multipart/form-data">
                         <label for="desc">Image description:</label>
-                        <input type="text" name="desc" id="desc" placeholder="description" maxlength="{{ key_len }}" value="{{ (image.desc or "") | escape }}" />
+                        <input type="text" name="desc" id="desc" placeholder="description" maxlength="{{ desc_len }}" value="{{ (image.desc or "") | escape }}" />
 
                         <br />
 
                         <label for="key">Access key:</label>
-                        <input type="password" name="key" id="key" placeholder="key" maxlength="{{ desc_len }}" required />
+                        <input type="password" name="key" id="key" placeholder="key" maxlength="{{ key_len }}" required />
 
                         <br />
 
@@ -173,7 +183,5 @@
         {% else %}
             <i>No images found :(</i>
         {% endif %}
-
-        <script>console.log("Originally made with <3 by Ari Archer <ari@ari.lt> on 2024/03/10, licensed under the Unlicense: https://ari.lt/gh/imag");</script>
     </body>
 </html>

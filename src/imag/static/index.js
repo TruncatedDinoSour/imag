@@ -1,3 +1,10 @@
+/**
+ * @file
+ * @license
+ * This is free and unencumbered software released into the public domain.
+ * For more information, please refer to <http://unlicense.org/>
+ */
+
 "use strict";
 
 function vote(mode, id) {
@@ -30,3 +37,14 @@ function vote(mode, id) {
         })
         .catch((e) => console.error(e));
 }
+
+function main() {
+    console.log(
+        "Originally made with <3 by Ari Archer <ari@ari.lt> on 2024/03/10, licensed under the Unlicense: https://ari.lt/gh/imag",
+    );
+
+    for (let img of document.getElementsByTagName("img"))
+        img.title = img.alt;
+}
+
+document.addEventListener("DOMContentLoaded", main);

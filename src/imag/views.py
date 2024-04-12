@@ -42,12 +42,14 @@ def post_image() -> Response:
     if not mime.startswith("image/"):
         flask.abort(400, "Invalid image file.")
 
-    image: models.Image = models.Image((flask.request.form.get("desc") or "").strip())
+    file = file.read()
+    image: models.Image = models.Image((flask.request.form.get("desc") or "").strip(), file)
 
     models.db.session.add(image)
     models.db.session.commit()
 
-    file.save(os.path.join(const.IMAGE_DIR, str(image.iid)))
+    with open(os.path.join(const.IMAGE_DIR, str(image.iid)), "wb") as fp:
+        fp.write(file)
 
     return flask.redirect(flask.url_for("views.image", iid=image.iid))
 

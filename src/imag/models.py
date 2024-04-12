@@ -4,11 +4,13 @@
 
 import base64
 import typing as t
-import os
 from datetime import datetime
 from enum import Enum, auto
+from io import BytesIO
 from secrets import SystemRandom
 
+import PIL
+import pytesseract  # type: ignore
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_sqlalchemy import SQLAlchemy
@@ -98,20 +100,33 @@ class Image(db.Model):
         db.Integer,
         default=0,
     )
+    ocr: str = db.Column(
+        Unicode(const.MAX_OCR),
+        nullable=False,
+    )
 
-    def __init__(self, desc: t.Optional[str] = None) -> None:
+    def __init__(self, desc: t.Optional[str], file: bytes) -> None:
         """create a new image"""
         self.set_desc(desc)
+        self.set_ocr(file)
 
     # i just dislike properties for db stuff
 
-    def set_desc(self, desc: t.Optional[str] = None) -> "Image":
+    def set_desc(self, desc: t.Optional[str]) -> "Image":
         """set `desc` description"""
 
         if desc:
             assert len(desc) <= const.DESC_LEN, "description too long"
 
         self.desc: t.Optional[str] = desc
+        return self
+
+    def set_ocr(self, file: bytes) -> "Image":
+        """set `ocr`"""
+
+        with PIL.Image.open(BytesIO(file)) as img:  # type: ignore
+            self.ocr: str = str(pytesseract.image_to_string(img)).strip()[: const.MAX_OCR].strip()  # type: ignore
+
         return self
 
     def json(self) -> t.Dict[str, t.Any]:
@@ -136,6 +151,7 @@ class Image(db.Model):
                 cls.desc.ilike(f"%{query}%"),  # type: ignore
                 cls.created.cast(db.String).ilike(f"%{query}%"),  # type: ignore
                 cls.edited.cast(db.String).ilike(f"%{query}%"),  # type: ignore
+                cls.ocr.cast(db.String).ilike(f"%{query}%"),  # type: ignore
             )
         )
 

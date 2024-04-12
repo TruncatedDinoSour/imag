@@ -20,6 +20,11 @@ this project is released under unlicense and i give away all my rights to this p
 
 license : unlicense
 
+# prerequisites
+
+-   tesseract : <https://github.com/tesseract-ocr>
+-   tesseract english data ( or whatever other languages ) : <https://github.com/tesseract-ocr/tessdata/blob/main/eng.traineddata>
+
 # bot
 
 i made a matrix bot to integrate well with this, it is open source : <https://ari.lt/gh/quotes-bot>, mainly for purpose of posting quotes
@@ -54,6 +59,6 @@ this comes from an email i got from a user :
 1. clone the repository : `git clone https://ari.lt/gh/imag && cd imag`
 2. make sure you have virtualenv installed ( either through python-virtualenv / python3-virtualenv / py3-virtualenv packages, or by pip - `python3 -m pip install --user --break-system-packages --upgrade virtualenv`
 3. ensure you have sqlite3 and memcached installed : `apt install sqlite3 memcached`
-3. create a new virtual environment : `python3 -m virtualenv venv && source venv/bin/activate`
-4. install the dependencies in the environment : `pip install -r requirements.txt`
-5. run the app by either running `scripts/run.sh` or by manually starting memcached and running `src/main.py` with gunicorn ( i assume you're reverse proxying it anyway )
+4. create a new virtual environment : `python3 -m virtualenv venv && source venv/bin/activate`
+5. install the dependencies in the environment : `pip install -r requirements.txt`
+6. run the app by either running `scripts/run.sh` or by manually starting memcached and running `src/main.py` with gunicorn ( i assume you're reverse proxying it anyway )

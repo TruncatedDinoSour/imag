@@ -3,3 +3,5 @@ flask-sqlalchemy
 python-magic
 flask-limiter
 pymemcache
+pytesseract
+Pillow
