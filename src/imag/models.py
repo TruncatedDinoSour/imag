@@ -125,7 +125,7 @@ class Image(db.Model):
         """set `ocr`"""
 
         with PIL.Image.open(BytesIO(file)) as img:  # type: ignore
-            self.ocr: str = str(pytesseract.image_to_string(img)).strip()[: const.MAX_OCR].strip()  # type: ignore
+            self.ocr: str = str(pytesseract.image_to_string(img)).lower().strip()[: const.MAX_OCR].strip()  # type: ignore
 
         return self
 
