@@ -44,8 +44,10 @@ def with_access(
                 key=flask.request.form.get("key")
             ).first()
 
+            flask.g.setdefault("access", access.access_level)  # type: ignore
+
             if access and (access.access_level.value >= access_level.value):  # type: ignore
-                return fn(*args, **kwargs)
+                return fn(*args, **kwargs)  # type: ignore
             else:
                 flask.abort(403)
 

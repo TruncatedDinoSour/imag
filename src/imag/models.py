@@ -35,6 +35,7 @@ class AccessLevel(Enum):
     """access level of an access token"""
 
     write = auto()
+    delete = auto()
     admin = auto()
 
 

@@ -24,6 +24,8 @@ def main() -> int:
 
     print("-- Migration for version 3.0.0: OCR support")
 
+    print("BEGIN TRANSACTION;")
+
     print(f"ALTER TABLE image ADD COLUMN ocr VARCHAR({s}) NOT NULL DEFAULT '';")
 
     conn: sqlite3.Connection = sqlite3.connect(":memory:")
@@ -33,6 +35,8 @@ def main() -> int:
             ocr: str = str(pytesseract.image_to_string(img)).lower().strip()[:s].strip()  # type: ignore
             ocre: str = conn.execute("SELECT quote(?);", (ocr,)).fetchone()[0]
             print(f"UPDATE image SET ocr={ocre} WHERE iid={os.path.basename(image)};")
+
+    print("COMMIT;")
 
     return 0
 

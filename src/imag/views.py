@@ -94,6 +94,9 @@ def edit(iid: int) -> Response:
     image: models.Image = models.Image.query.filter_by(iid=iid).first_or_404()
 
     if flask.request.form.get("delete"):
+        if flask.g.get("access").value < models.AccessLevel.delete.value:
+            flask.abort(403)
+
         models.db.session.delete(image)
         models.db.session.commit()
         os.remove(os.path.join(const.IMAGE_DIR, str(image.iid)))
