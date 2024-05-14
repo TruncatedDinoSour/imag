@@ -22,11 +22,9 @@ def main() -> int:
 
     s: int = int(sys.argv[2])
 
-    print("-- Migration for version 3.0.0: OCR support")
+    print("-- Migration for version 3.1.1: OCR case sensitivity")
 
     print("BEGIN TRANSACTION;")
-
-    print(f"ALTER TABLE image ADD COLUMN ocr VARCHAR({s}) NOT NULL DEFAULT '';")
 
     conn: sqlite3.Connection = sqlite3.connect(":memory:")
 
