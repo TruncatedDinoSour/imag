@@ -126,7 +126,7 @@ class Image(db.Model):
         """set `ocr`"""
 
         with PIL.Image.open(BytesIO(file)) as img:  # type: ignore
-            self.ocr: str = str(pytesseract.image_to_string(img)).lower().strip()[: const.MAX_OCR].strip()  # type: ignore
+            self.ocr: str = str(pytesseract.image_to_string(img)).strip()[: const.MAX_OCR].strip()  # type: ignore
 
         return self
 
@@ -145,8 +145,6 @@ class Image(db.Model):
     @classmethod
     def by_search(cls, query: str, score: bool = True) -> t.Tuple["Image", ...]:
         """search for images"""
-
-        query = query.lower()
 
         results: t.Any = cls.query.filter(
             or_(
