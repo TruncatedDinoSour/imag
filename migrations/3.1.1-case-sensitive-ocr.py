@@ -32,7 +32,7 @@ def main() -> int:
 
     for image in os.listdir(sys.argv[1]):
         with PIL.Image.open(os.path.join(sys.argv[1], image)) as img:  # type: ignore
-            ocr: str = str(pytesseract.image_to_string(img)).lower().strip()[:s].strip()  # type: ignore
+            ocr: str = str(pytesseract.image_to_string(img)).strip()[:s].strip()  # type: ignore
             ocre: str = conn.execute("SELECT quote(?);", (ocr,)).fetchone()[0]
             print(f"UPDATE image SET ocr={ocre} WHERE iid={os.path.basename(image)};")
 
